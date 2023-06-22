@@ -11,6 +11,7 @@ const router = new Router({ prefix: '/users' }) // 设定前缀
 //     ctx.body = 'hello user'
 // })
 
+
 // 注册接口, 业务是由controller进行封装的
 router.post('/register', register)
 
