@@ -1,5 +1,12 @@
+const bcrypt = require('bcryptjs')
+
 const { getUserInfo } = require('../service/user.service')
-const { userFormateError, userAlreadyExisted, userRegisterError } = require('../constant/err.type')
+const { userFormateError,
+     userAlreadyExisted, 
+     userRegisterError,
+     userDoesNotExist,
+     invalidPassword,
+     userLoginError} = require('../constant/err.type')
 
 
 const userValidator = async(ctx, next) => {
@@ -53,7 +60,47 @@ const verifyUser = async(ctx, next) => {
     await next()
 }
 
+const cryptPassword = async(ctx, next) => {
+    const { password } = ctx.request.body
+    // 对照npm的两句加密语句
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync(password, salt);
+
+    // 替换原密码
+    ctx.request.body.password = hash
+
+    await next()    
+}
+
+const verifyLogin = async(ctx, next) => {
+    // 1. 判断用户是否存在，不存在就报错
+    const { username, password } = ctx.request.body
+
+    try {
+        const res = await getUserInfo({ username })
+
+        if(!res) { // 用户名不存在
+            console.error('用户名不存在', { username })
+            ctx.app.emit('error', userDoesNotExist, ctx)
+            return
+        }
+        // 2. 密码是否匹配（不匹配：报错）bcryptjs匹配密码
+        if(!bcrypt.compareSync(password, res.password)) {
+            ctx.app.emit('error', invalidPassword, ctx)
+            return
+        }
+
+    } catch (error) {
+        console.error('用户登录失败', error)
+        return ctx.app.emit('error', userLoginError, ctx)
+    }
+    await next()
+    
+
+}
 module.exports = {
     userValidator,
-    verifyUser
+    verifyUser,
+    cryptPassword,
+    verifyLogin
 }
