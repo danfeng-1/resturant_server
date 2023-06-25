@@ -45,6 +45,7 @@ class UserController {
                 code: 200,
                 message: '用户登陆成功',
                 result: {
+                    username,
                     token: jwt.sign(resUser, JWT_SECRET, { expiresIn: '2d' }) // 2天过期
                 }
             }
