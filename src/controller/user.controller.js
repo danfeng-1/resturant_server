@@ -7,14 +7,12 @@ const { JWT_SECRET } = require('../config/config.default') // 私钥
 class UserController {
     async register(ctx, next) {
         // 1. 获取数据(已经经过中间件处理后的无差错数据)
-        console.log(ctx.request.body)
 
         const { username, password } = ctx.request.body
-
+        console.log('register: username, password',username, password)
         // 2. 操作数据库
         try {
             const res = await createUser(username, password)
-            console.log('res', res)
 
             // 3. 返回结果
             ctx.body = {
@@ -59,7 +57,6 @@ class UserController {
         // 1. 获取数据
         const id = ctx.state.user.id
         const password = ctx.request.body.password
-        // console.log(id, password)
         // 2. 操作数据库
         try {
             const res = await updateById({ id, password }) // 把要传递的id 和要修改的加密了的密码传过去

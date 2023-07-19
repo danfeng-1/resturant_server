@@ -61,7 +61,7 @@ const Drinks = seq.define(
       comment: '主要食材',
     }, 
     satisfaction: {
-      type: DataTypes.DECIMAL(10, 4),
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
       defaultValue: 100.00,
       comment: '满意度',
@@ -70,7 +70,7 @@ const Drinks = seq.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0,
-      comment: '是否主推,默认不主推',
+      comment: '是否主推,默认不主推', // 如果BOOLEAN在数据库中时tinyint
     },
     imgUrl: {
       type: DataTypes.STRING,

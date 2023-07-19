@@ -2,7 +2,7 @@ const { goodsFormatError, GoodsAlreadyExisted } = require('../constant/err.type'
 const { getGoods } = require('../service/goods.service')
 
 const validator = async (ctx, next) => {
-  // console.log('ctx',ctx.request.body)
+
   if(ctx.request.body.cate_id === 1) { // 说明是drink
     try {
       ctx.verifyParams({

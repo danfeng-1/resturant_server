@@ -17,6 +17,7 @@ const errHandler = require('./errHandler')
 const app = new Koa()
 
 app.use(parameter(app))
+
 // 在所有路由中间件注册之前注册,就会绑定ctx.request.body到
 // koaBody本身支持文件上传
 app.use(
@@ -34,12 +35,28 @@ app.use(
 // console.log('process.cwd()',process.cwd())
 // console.log(path.join(__dirname, '../upload/goods'))
 
+// 跨域
+app.use(async (ctx, next)=> {
+  ctx.set('Access-Control-Allow-Origin', '*'); // http://localhost:5173
+  // ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+  ctx.set('Access-Control-Allow-Headers', '*');
+  ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, PATCH, DELETE, OPTIONS');
+  if (ctx.method == 'OPTIONS') {
+    ctx.body = 200; 
+  } else {
+    await next();
+  }
+});
+
+
 app.use(koaStatic(path.join(__dirname, '../upload/goods'))) // 作为静态资源的路径
 // 注册中间件
 // app.use(userRouter.routes())
 // app.use(goodsRouter.routes())
 app.use(router.routes())
 app.use(router.allowedMethods()) // 不允许的Http请求
+
+
 
 // 在出错的地方使用ctx.app.emit提交错误, 在 app 中通过app.on监听
 app.on('error', errHandler) 

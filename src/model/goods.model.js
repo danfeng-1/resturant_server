@@ -5,6 +5,7 @@ const seq = require('../db/seq')
 const Goods = seq.define(
   'hotfood',
   {
+    
     name: {
       type: DataTypes.STRING,
       unique: true,

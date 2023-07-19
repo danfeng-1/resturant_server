@@ -1,11 +1,11 @@
 
 const Goods = require('../model/goods.model')
 const Drinks = require('../model/drinks.model')
-
+const Category = require('../model/category.model')
 class GoodsService {
   async createGoods(goods) {
     let res
-    console.log('goods',goods)
+
     if(goods.cate_id !== 1) { // 非饮品类
       res = await Goods.create(goods)
     } else {
@@ -30,8 +30,7 @@ class GoodsService {
       attributes: ['name','price', 'weight'],
       where: whereOpt
     })
-    // console.log('------')
-    // console.log(res1, res2) // 均是null 
+
     if(res1) {
       return res1.dataValues
     } else if(res2) {
@@ -107,7 +106,7 @@ class GoodsService {
       offset: offset,
       limit: pageSize * 1,
     });
-    // console.log('hotfoodResult',hotfoodResult)
+
     const drinksResult = await Drinks.findAndCountAll({
       where: {
         cate_id: id * 1,
@@ -116,7 +115,6 @@ class GoodsService {
       limit: pageSize * 1,
     });
 
-    // console.log('drinksResult',drinksResult)
     if(drinksResult.count <= 0) {
       return {
         pageNum,
@@ -134,6 +132,27 @@ class GoodsService {
     }
   
   }
+
+  async getAllCategory(pageNum, pageSize) {
+    const offset = (pageNum - 1) * pageSize
+    const { count, rows } = await Category.findAndCountAll({ // findAndCountAll是sequelize内置内置
+      offset: offset,
+      limit: pageSize * 1,
+    })
+    return {
+      pageNum,
+      pageSize,
+      total: count,
+      list: rows,
+    }
+  }
+  // 添加类别
+  async createCate(cate) {
+    res = await Category.create(cate)
+    console.log('res--------category', res)
+    return res.dataValues
+  }
+  
 }
 
 module.exports = new GoodsService()

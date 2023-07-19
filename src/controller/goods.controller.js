@@ -3,7 +3,14 @@ const { fileUploadError,
   publishGoodsError,
   invalidGoodsID} =  require('../constant/err.type')
 
-const { createGoods, updateGoods, removeGoods, restoreGoods, findGoods, searchGoods } = require('../service/goods.service')
+const { createGoods, 
+  updateGoods, 
+  removeGoods, 
+  restoreGoods, 
+  findGoods, 
+  searchGoods,
+  getAllCategory,
+  createCate } = require('../service/goods.service')
 const path = require('path')
 
 class GoodsController {
@@ -114,10 +121,9 @@ class GoodsController {
       const pageNum = ctx.query.pageNum || 1;
       const pageSize = ctx.query.pageSize || 10;
 
-      console.log(id, pageNum, pageSize)
       // 2. 调用数据处理的相关方法
       const res = await searchGoods(id, pageNum, pageSize)
-      // console.log('res2',res)
+
       // 3. 返回结果
       ctx.body = {
         code: 200,
@@ -126,6 +132,38 @@ class GoodsController {
       }
       
     }
+
+    async getCategory(ctx) {
+      // 1. 解析pageNum和pageSize
+      const { pageNum = 1, pageSize = 10 } = ctx.request.query
+      // 2. 调用数据处理的相关方法
+      const res = await getAllCategory(pageNum, pageSize)
+      // 3. 返回结果
+      ctx.body = {
+        code: 200,
+        message: '获取商品列表成功',
+        result: res,
+      }
+    }
+
+    async addCate(ctx) {
+      try {
+        // const { createdAt, updatedAt, ...res } = await createGoods(
+        const { createdAt, updatedAt, deletedAt, ...res } = await createCate(
+          ctx.request.body
+        )
+        ctx.body = {
+          code: 200,
+          message: '添加类别成功',
+          result: res,
+        }
+      } catch (err) {
+        console.error(err)
+        return ctx.app.emit('error', publishGoodsError, ctx)
+      }
+
+    }
+    
 }
 
 module.exports = new GoodsController()

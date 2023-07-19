@@ -74,4 +74,35 @@ module.exports = {
       message: '无效的商品id',
       result: '',
     },
+    FormatError: {
+      code: '10301',
+      message: '数据格式错误',
+      result: '',
+    },
+    cartGoodsError: {
+      code: '10302',
+      message: '加购商品不存在',
+      result: '',
+    },
+    queryGoodsError: {
+      code: '10303',
+      message: '请求商品失败',
+      result: '',
+    },
+    updateCartError: {
+      code: '10304',
+      message: '更新购物车失败',
+      result: '',
+    },
+
+    addrAlreadyExist: {
+      code: '10401',
+      message: '收货人和地址已经存在',
+      result: '',
+    },
+    queryAddrError: {
+      code: '10402',
+      message: '请求地址信息失败',
+      result: '',
+    }
   }

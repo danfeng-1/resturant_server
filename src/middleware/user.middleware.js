@@ -47,14 +47,12 @@ const verifyUser = async(ctx, next) => {
         const res = await getUserInfo({ username })
         if(res) { // 不为空已经存在用户
             console.error('用户名已经存在', {username})
-            ctx.app.emit('error', userAlreadyExisted, ctx) // 在出错的地方使用ctx.app.emit提交错误
-            return
+            return ctx.app.emit('error', userAlreadyExisted, ctx) // 在出错的地方使用ctx.app.emit提交错误
         }
   
     } catch (error) { // 其他任何用户错误
         console.error('获取用户信息错误', error)
-        ctx.app.emit('error', userRegisterError, ctx)
-        return
+        return ctx.app.emit('error', userRegisterError, ctx)
     }
 
     await next()
@@ -81,13 +79,11 @@ const verifyLogin = async(ctx, next) => {
 
         if(!res) { // 用户名不存在
             console.error('用户名不存在', { username })
-            ctx.app.emit('error', userDoesNotExist, ctx)
-            return
+            return ctx.app.emit('error', userDoesNotExist, ctx)
         }
         // 2. 密码是否匹配（不匹配：报错）bcryptjs匹配密码
         if(!bcrypt.compareSync(password, res.password)) {
-            ctx.app.emit('error', invalidPassword, ctx)
-            return
+            return ctx.app.emit('error', invalidPassword, ctx)
         }
 
     } catch (error) {

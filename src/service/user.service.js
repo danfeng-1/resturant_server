@@ -10,7 +10,6 @@ class UserService {
             username: username,
             password: password
         })
-        console.log(res)
         return res
     }
     async getUserInfo({ id, username, password, isadmin }) {
@@ -20,7 +19,7 @@ class UserService {
         password && Object.assign(whereOpt, { password })
         isadmin && Object.assign(whereOpt, { isadmin })
         const res = await User.findOne({
-            attributes: ['id', 'username', 'password', 'isadmin'],
+            attributes: ['id', 'username', 'password', 'isadmin'], // 查询到有该用户时返回的信息有id
             where: whereOpt
         })
         return res ? res.dataValues : null 
@@ -33,7 +32,6 @@ class UserService {
         password && Object.assign(newUser, { password })
         isadmin && Object.assign(newUser, { isadmin })
         const res = await User.update(newUser, { where: whereOpt }) // res 是 [0]未修改 [1]则修改了
-        // console.log(res)
         return res[0] > 0 ? true: false
     }
 }

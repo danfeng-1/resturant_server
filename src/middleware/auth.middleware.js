@@ -4,6 +4,7 @@ const { JWT_SECRET } = require('../config/config.default')
 
 const { tokenExpiredError, invalidToken, hasNotAdminPermission } = require('../constant/err.type')
 
+
 const auth = async (ctx, next) => {
     // 用户授权：服务器拿到请求头里面携带的token
     const { authorization = '' } = ctx.request.header
@@ -12,7 +13,9 @@ const auth = async (ctx, next) => {
     try {
         // user中包含了payload的信息(id, user_name, is_admin)
         const user = jwt.verify(token, JWT_SECRET)
-        ctx.state.user = user
+
+        console.log('--------------------',user)
+        ctx.state.user = user // 验证通过，用户信息存在这里：ctx.state.user
       } catch (err) { 
         switch (err.name) { // jwt返回的错误名统一处理再返回给客户端
           case 'TokenExpiredError':
